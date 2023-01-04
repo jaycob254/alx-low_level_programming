@@ -1,52 +1,52 @@
 #include "search_algos.h"
-int find_number(int *a, size_t size, int val, int l, int high);
-
 
 /**
- * interpolation_search - Searches for a number in an array
- * @array: List of integers in which the potential number might be located.
- * @size: The length of the list.
- * @value: The value we are trying to find.
- * Return: The first index where value is located, or if value is not present
- * in array or if array is NULL, your function must return -1
+ * interpolation_search - searches for a value in an array of
+ * integers using the Interpolation search algorithm
+ *
+ * @array: input array
+ * @size: size of the array
+ * @value: value to search in
+ * Return: index of the number
  */
 int interpolation_search(int *array, size_t size, int value)
 {
+	size_t pos, low, high;
+	double f;
 
-	return (find_number(array, size - 1, value, 0, size - 1));
-}
-
-
-/**
- * find_number - Searches for a number in an array
- * @a: List of integers in which the potential number might be located.
- * @size: The length of the list.
- * @val: The value we are trying to find.
- * @l: the low end of the array
- * @high: the high end of the array
- * Return: The first index where value is located, or if value is not present
- * in array or if array is NULL, your function must return -1
- */
-int find_number(int *a, size_t size, int val, int l, int high)
-{
-	size_t pos;
-
-	pos = l + (((double)(high - l) / (a[high] - a[l])) * (val - a[l]));
-	if (pos > size)
-	{
-		printf("Value checked array[%lu] is out of range\n", pos);
+	if (array == NULL)
 		return (-1);
-	}
-	if (a[pos] == val)
+
+	low = 0;
+	high = size - 1;
+
+	while (size)
 	{
-		printf("Value checked array[%lu] = [%d]\n", pos, val);
-		return (pos);
+		f = (double)(high - low) / (array[high] - array[low]) * (value - array[low]);
+		pos = (size_t)(low + f);
+		printf("Value checked array[%d]", (int)pos);
+
+		if (pos >= size)
+		{
+			printf(" is out of range\n");
+			break;
+		}
+		else
+		{
+			printf(" = [%d]\n", array[pos]);
+		}
+
+		if (array[pos] == value)
+			return ((int)pos);
+
+		if (array[pos] < value)
+			low = pos + 1;
+		else
+			high = pos - 1;
+
+		if (low == high)
+			break;
 	}
-	for (pos = pos; pos <= size; pos++)
-	{
-		printf("Value checked array[%lu] = [%d]\n", pos, a[pos]);
-		if (a[pos] == val)
-			return (pos);
-	}
+
 	return (-1);
 }
