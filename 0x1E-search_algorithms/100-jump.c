@@ -1,52 +1,44 @@
-#include <math.h>
 #include "search_algos.h"
-
+#include <math.h>
 
 /**
- * jump_search - Searches for a value in an array
- * @array: The size of the array we are looking through
- * @size: The size of the array
- * @value: The value that the function is trying to find.
- * Return: The index of the value or if value is not present in array
- * or if array is NULL, your function must return -1
+ * jump_search - searches for a value in an array of
+ * integers using the Jump search algorithm
+ *
+ * @array: input array
+ * @size: size of the array
+ * @value: value to search in
+ * Return: index of the number
  */
 int jump_search(int *array, size_t size, int value)
 {
-	int jump_point;
-	int low;
-	int high;
-	int idx;
-	char *message;
+	int index, m, k, prev;
 
-	if (array == NULL)
+	if (array == NULL || size == 0)
 		return (-1);
-	jump_point = sqrt(size);
 
-	for (idx = 0; idx < (int)size; idx += jump_point)
+	m = (int)sqrt((double)size);
+	k = 0;
+	prev = index = 0;
+
+	do {
+		printf("Value checked array[%d] = [%d]\n", index, array[index]);
+
+		if (array[index] == value)
+			return (index);
+		k++;
+		prev = index;
+		index = k * m;
+	} while (index < (int)size && array[index] < value);
+
+	printf("Value found between indexes [%d] and [%d]\n", prev, index);
+
+	for (; prev <= index && prev < (int)size; prev++)
 	{
-		if (value <= array[idx])
-		{
-			low = idx - 3;
-			high = idx;
-			message = "Value found between indexes";
-			printf("%s [%d] and [%d]\n", message, low, high);
-			break;
-		}
-		printf("Value checked array[%d] = [%d]\n", idx, array[idx]);
-	}
-	if (idx > (int)size)
-	{
-		low = idx - jump_point;
-		high = low;
-		message = "Value found between indexes";
-		printf("%s [%d] and [%d]\n", message, low, idx);
+		printf("Value checked array[%d] = [%d]\n", prev, array[prev]);
+		if (array[prev] == value)
+			return (prev);
 	}
 
-	for (idx = low; idx <= high; idx++)
-	{
-		printf("Value checked array[%d] = [%d]\n", low, array[idx]);
-		if (value == array[idx])
-			return (idx);
-	}
 	return (-1);
 }
